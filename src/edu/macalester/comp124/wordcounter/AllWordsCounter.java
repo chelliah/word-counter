@@ -13,12 +13,16 @@ public class AllWordsCounter {
     public static final int MAX_WORDS = 10000;
 
 	// TODO: initialize instance variable to hold MAX_WORDS objects
-    SingleWordCounter counters[];
+    SingleWordCounter counters[] = new SingleWordCounter[MAX_WORDS];
 
     public int getNumWords() {
         // TODO: count the number of distinct words,
         // ie. the number of non-null counter objects.
-        return -1;
+        for (int i=0;i<counters.length;i++){
+            if (counters[i]==null){
+            return i;}
+        }
+        return counters.length;
     }
 	
 	/**
@@ -31,11 +35,20 @@ public class AllWordsCounter {
         int n = getNumWords();
         for (int i = 0; i < n; i++) {
             // If you find the word increment the count and return
+            if(counters[i].wordMatches(word)){
+                counters[i].incrementCount();
+                return;
+            }
         }
 
         // You didn't find the word. Add a new word counter to the array.
         // Don't forget to increment the word's count to get it to 1!
-	}
+        counters[n] = new SingleWordCounter(word);
+        counters[n].incrementCount();
+
+    }
+
+
 	
 	/**
 	 * Return the count for the particular word.  Remember that the
@@ -44,9 +57,16 @@ public class AllWordsCounter {
 	 * @return
 	 */
 	public int getCount(String word) {
+        int n = getNumWords();
+        for (int i = 0; i < n; i++) {
+            // If you find the word increment the count and return
+            if(counters[i].wordMatches(word)){
+                return counters[i].getCount();
+            }
+        }
         // TODO: pattern this after the count() function.
         // Make sure to return 0 for words you haven't seen before.
-        return -1;
+        return 0;
 	}
 	
 	/**
@@ -56,9 +76,12 @@ public class AllWordsCounter {
 	public String []  getAllWords() {
         // part one: create an array of strings of size equal to the number of words
         int n = getNumWords();
-        String words[] = null;  // FIXME
+        String words[] = new String[n];  // FIXME
 
         // part two: fill the array of strings using a loop
+        for (int i = 0; i<n; i++){
+            words[i]= counters[i].getWord();
+        }
 
         return words;
 	}
